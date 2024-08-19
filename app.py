@@ -16,7 +16,6 @@
 
 
 
-
 from flask import Flask, request, jsonify
 from telethon import TelegramClient
 import asyncio
@@ -24,49 +23,59 @@ from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 
-api_id = '17860937'  # Ваш API ID
+# Telegram credentials
+api_id = '17860937'
 api_hash = '6bdbb8eae683414b8d13798b2b37640b'
-phone = '+380936707972'  # Ваш номер телефону
+phone = '+380936707972'  # Your phone number
 
 client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 
-# Створюємо один цикл подій, який будемо використовувати для асинхронних завдань
-loop = asyncio.get_event_loop()
+# Create a ThreadPoolExecutor for running async code in a synchronous environment
 executor = ThreadPoolExecutor(max_workers=1)
 
 async def send_message(phone_number, message):
-    async with client:
-        try:
-            user = await client.get_entity(phone_number)  # Отримуємо користувача за номером телефону
-            await client.send_message(user, message)
-            return 'Message sent!'
-        except Exception as e:
-            return f"Error: {e}"
+    await client.start(phone)
+    try:
+        await client.send_message(phone_number, message)
+    except Exception as e:
+        print(f"Error sending message: {e}")
+        return False
+    finally:
+        await client.disconnect()
+    return True
 
 def run_async(coroutine):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     return loop.run_until_complete(coroutine)
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def hello_world():
     return 'Hello, World!'
 
 @app.route('/send_message', methods=['POST'])
 def send_telegram_message():
     data = request.json
+    print("Received data:", data)  # Logging for debugging
+
     phone_number = data.get('phone_number')
     message = data.get('message')
-    
+
     if not phone_number or not message:
         return jsonify({'status': 'error', 'message': 'Missing phone_number or message'}), 400
-    
+
     try:
-        # Запускаємо асинхронну функцію в ThreadPoolExecutor
+        # Run the async function in the ThreadPoolExecutor
         future = executor.submit(run_async, send_message(phone_number, message))
-        response_message = future.result()  # Чекаємо завершення асинхронної функції
-        return jsonify({'status': 'success', 'message': response_message})
+        success = future.result()  # Wait for the async function to complete
+        if success:
+            return jsonify({'status': 'success', 'message': f'Message sent to {phone_number}'})
+        else:
+            return jsonify({'status': 'error', 'message': 'Failed to send message'}), 500
     except Exception as e:
+        print(f"Exception: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
