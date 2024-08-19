@@ -36,10 +36,15 @@ client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 #        await client.send_message(phone_number, message)
 
 
+# Асинхронна функція для надсилання повідомлення
 async def send_message(phone_number, message):
-    await client.start(phone)
-    await client.send_message(phone_number, message)
-    await client.disconnect()
+    async with client:
+        await client.send_message(phone_number, message)
+
+# Синхронний обгортка для запуску асинхронної функції
+def send_message_sync(phone_number, message):
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(send_message(phone_number, message))
 
 
 @app.route('/')
@@ -67,7 +72,8 @@ def send_telegram_message():
     #    return jsonify({'status': 'error', 'message': str(e)}), 500
 
     try:
-        asyncio.run(send_message(phone_number, message))  # Викликаємо асинхронний код без потоків
+        # Виклик синхронної функції, яка запускає асинхронний код
+        send_message_sync(phone_number, message)
         return jsonify({'status': 'success', 'message': f'Message sent to {phone_number}'})
     except Exception as e:
         print(f"Exception: {e}")
