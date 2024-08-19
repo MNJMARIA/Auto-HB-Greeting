@@ -66,7 +66,7 @@ def send_telegram_message():
     #    print(f"Exception: {e}")
     #    return jsonify({'status': 'error', 'message': str(e)}), 500
 
- try:
+    try:
         asyncio.run(send_message(phone_number, message))  # Викликаємо асинхронний код без потоків
         return jsonify({'status': 'success', 'message': f'Message sent to {phone_number}'})
     except Exception as e:
