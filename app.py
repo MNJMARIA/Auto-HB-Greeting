@@ -37,7 +37,7 @@ async def send_message(phone_number, message):
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'Hellooo, World!'
 
 @app.route('/send_message', methods=['POST'])
 def send_telegram_message():
