@@ -47,13 +47,14 @@ def send_greeting():
     if not phone_number or not message:
         return jsonify({"status": "error", "message": "Phone number or message is missing"}), 400
 
-    try:
-        with client:
-            client.loop.run_until_complete(send_message(phone_number, message))
-    except Exception as e:
-        app.logger.error(f"Error sending message: {e}")
-        return jsonify({"status": "error", "message": f"Failed to send message: {str(e)}"}), 500
-
+    #try:
+    #   with client:
+    #       client.loop.run_until_complete(send_message(phone_number, message))
+    #except Exception as e:
+    #    app.logger.error(f"Error sending message: {e}")
+    #    return jsonify({"status": "error", "message": f"Failed to send message: {str(e)}"}), 500
+    with client:
+        client.loop.run_until_complete(send_message(phone_number, message))
     return jsonify({"status": "success", "message": f"Greeting sent to {phone_number}"})
 
 if __name__ == '__main__':
