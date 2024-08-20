@@ -10,8 +10,16 @@ phone = '+380936707972'  # Ваш номер телефону
 client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 
 async def send_message(phone_number, message):
-    async with client:
-        await client.send_message(phone_number, message)
+    try:
+        print("6.1 Створюємо новий сеанс клієнта")
+        async with client:
+            print("6.2 Сеанс клієнта відкритий, надсилаємо повідомлення")
+            await client.send_message(phone_number, message)
+            print("6.3 Повідомлення надіслано успішно")
+    except Exception as e:
+        print(f"6.4 Виникла помилка в send_message: {e}")
+        raise e
+
 
 @app.route('/')
 async def hello_world():
