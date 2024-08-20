@@ -38,11 +38,12 @@ def hello_world():
     return 'Hellooo, World!'
 
 
-@app.route('/send_greeting', methods=['GET'])
+@app.route('/send_greeting', methods=['POST'])
 def send_greeting():
-    data = request.json
+    data = request.get_json()
     phone_number = data.get('phone_number')
     message = data.get('message')
+
 
     if not phone_number or not message:
         return jsonify({"status": "error", "message": "Phone number or message is missing"}), 400
