@@ -48,9 +48,8 @@ def send_greeting():
         return jsonify({"status": "error", "message": "Phone number or message is missing"}), 400
 
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(send_message(phone_number, message))
+        with client:
+            client.loop.run_until_complete(send_message(phone_number, message))
     except Exception as e:
         app.logger.error(f"Error sending message: {e}")
         return jsonify({"status": "error", "message": f"Failed to send message: {str(e)}"}), 500
