@@ -35,8 +35,13 @@ client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 #    await client.send_message(phone_number, message)
 #    await client.disconnect()
 
+#async def send_message(phone_number, message):
+#    async with client:
+#        await client.send_message(phone_number, message)
+
 async def send_message(phone_number, message):
     async with client:
+        await client.start(phone)
         await client.send_message(phone_number, message)
         
 @app.route('/')
@@ -49,7 +54,7 @@ async def send_greeting():
     data = await request.get_json()
     phone_number = data.get('phone_number')
     message = data.get('message')
-
+    
     if not phone_number or not message:
         return jsonify({"status": "error", "message": "Phone number or message is missing"}), 400
 
