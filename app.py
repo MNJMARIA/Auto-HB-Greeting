@@ -19,17 +19,26 @@ async def hello_world():
 
 @app.route('/send_greeting', methods=['POST'])
 async def send_greeting():
+    print("1. Отримано запит на /send_greeting")
+    
     data = await request.get_json()
+    print("2. Отримано дані:", data)
+    
     phone_number = data.get('phone_number')
     message = data.get('message')
+    print(f"3. Витягнуто номер телефону: {phone_number}, повідомлення: {message}")
     
     if not phone_number or not message:
+        print("4. Відсутній номер телефону або повідомлення")
         return jsonify({"status": "error", "message": "Phone number or message is missing"}), 400
 
     try:
+        print("5. Початок надсилання повідомлення")
         await send_message(phone_number, message)
+        print("6. Повідомлення успішно надіслано")
         return jsonify({"status": "success", "message": f"Greeting sent to {phone_number}"})
     except Exception as e:
+        print(f"7. Виникла помилка при надсиланні повідомлення: {e}")
         app.logger.error(f"Error sending message: {e}")
         return jsonify({"status": "error", "message": f"Failed to send message: {str(e)}"}), 500
 
