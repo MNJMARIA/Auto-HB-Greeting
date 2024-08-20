@@ -16,13 +16,13 @@
 
 
 
-#from flask import Flask, request, jsonify
-from quart import Quart, request, jsonify
+from flask import Flask, request, jsonify
+#from quart import Quart, request, jsonify
 from telethon import TelegramClient
 import asyncio
 
-#app = Flask(__name__)
-app = Quart(__name__)
+app = Flask(__name__)
+#app = Quart(__name__)
 
 api_id = '17860937'
 api_hash = '6bdbb8eae683414b8d13798b2b37640b'
@@ -39,10 +39,10 @@ client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 #    async with client:
 #        await client.send_message(phone_number, message)
 
-async def send_message(phone_number, message):
-    async with client:
-        await client.start(phone)
-        await client.send_message(phone_number, message)
+#async def send_message(phone_number, message):
+#async with client:
+#       await client.start(phone)
+#       await client.send_message(phone_number, message)
         
 @app.route('/')
 async def hello_world():
