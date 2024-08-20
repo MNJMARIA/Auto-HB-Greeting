@@ -40,11 +40,11 @@ async def send_message(phone_number, message):
         await client.send_message(phone_number, message)
         
 @app.route('/')
-def hello_world():
+async def hello_world():
     return 'Hellooooo, World!'
 
 @app.route('/send_greeting', methods=['POST'])
-def send_greeting():
+async def send_greeting():
     #data = request.get_json()
     data = await request.get_json()
     phone_number = data.get('phone_number')
