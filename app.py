@@ -5,14 +5,15 @@ app = Quart(__name__)
 
 api_id = '17860937'
 api_hash = '6bdbb8eae683414b8d13798b2b37640b'
-phone = '+380936707972'  # Ваш номер телефону
+#phone = '+380936707972'  # Ваш номер телефону
 
-client = TelegramClient('birthday_greetings_session', api_id, api_hash)
+client = TelegramClient('C:\Users\stepa\Desktop\birthday_greetings_session.session', api_id, api_hash)
 
 @app.before_serving
 async def startup():
-    await client.start(phone)
-    print("Telegram client started")
+    #await client.start(phone)
+     await client.start()  # Не передаємо телефон, щоб уникнути повторного запиту
+     print("Telegram client started")
 
 @app.after_serving
 async def shutdown():
@@ -30,7 +31,7 @@ async def send_message(phone_number, message):
 
 @app.route('/')
 async def hello_world():
-    return 'Hellooo, Wooorld!'
+    return 'Hellooo, Wooorld!!!'
 
 @app.route('/send_greeting', methods=['POST'])
 async def send_greeting():
