@@ -1,27 +1,6 @@
-#from flask import Flask
-
-#app = Flask(__name__)
-
-#@app.route('/')
-#def hello_world():
-#    return 'Hello, World!'
-
-#@app.route('/send_telegram', methods=['POST'])
-#def send_telegram():
-#    # Ваш код для надсилання повідомлень у Telegram
-#    return 'Telegram message sent!'
-
-#if __name__ == '__main__':
-#    app.run(debug=True)
-
-
-
-#from flask import Flask, request, jsonify
 from quart import Quart, request, jsonify
 from telethon import TelegramClient
-#import asyncio
 
-#app = Flask(__name__)
 app = Quart(__name__)
 
 api_id = '17860937'
@@ -30,27 +9,16 @@ phone = '+380936707972'  # Ваш номер телефону
 
 client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 
-#async def send_message(phone_number, message):
-#    await client.start(phone)
-#    await client.send_message(phone_number, message)
-#    await client.disconnect()
-
 async def send_message(phone_number, message):
     async with client:
         await client.send_message(phone_number, message)
 
-#async def send_message(phone_number, message):
-#async with client:
-#       await client.start(phone)
-#       await client.send_message(phone_number, message)
-        
 @app.route('/')
 async def hello_world():
     return 'Hellooo, Wooorld!'
 
 @app.route('/send_greeting', methods=['POST'])
 async def send_greeting():
-    #data = request.get_json()
     data = await request.get_json()
     phone_number = data.get('phone_number')
     message = data.get('message')
@@ -58,14 +26,7 @@ async def send_greeting():
     if not phone_number or not message:
         return jsonify({"status": "error", "message": "Phone number or message is missing"}), 400
 
-    #try:
-    #   with client:
-    #       client.loop.run_until_complete(send_message(phone_number, message))
-    #except Exception as e:
-    #    app.logger.error(f"Error sending message: {e}")
-    #    return jsonify({"status": "error", "message": f"Failed to send message: {str(e)}"}), 500
     try:
-        #asyncio.run(send_message(phone_number, message))
         await send_message(phone_number, message)
         return jsonify({"status": "success", "message": f"Greeting sent to {phone_number}"})
     except Exception as e:
