@@ -38,7 +38,7 @@ def hello_world():
     return 'Hellooo, World!'
 
 
-@app.route('/send_greeting', methods=['POST'])
+@app.route('/send_greeting', methods=['GET'])
 def send_greeting():
     data = request.json
     phone_number = data.get('phone_number')
