@@ -16,6 +16,8 @@ async def send_message(phone_number, message):
         print("6.2 Сеанс клієнта відкритий, надсилаємо повідомлення")
         await client.send_message(phone_number, message)
         print("6.3 Повідомлення надіслано успішно")
+        await client.disconnect()
+        print("6.3.2 Клієнт дісконектед")
     except Exception as e:
         print(f"6.4 Виникла помилка в send_message: {e}")
         raise e
