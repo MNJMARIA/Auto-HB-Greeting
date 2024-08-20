@@ -12,10 +12,10 @@ client = TelegramClient('birthday_greetings_session', api_id, api_hash)
 async def send_message(phone_number, message):
     try:
         print("6.1 Створюємо новий сеанс клієнта")
-        async with client:
-            print("6.2 Сеанс клієнта відкритий, надсилаємо повідомлення")
-            await client.send_message(phone_number, message)
-            print("6.3 Повідомлення надіслано успішно")
+        await client.start(phone=phone)
+        print("6.2 Сеанс клієнта відкритий, надсилаємо повідомлення")
+        await client.send_message(phone_number, message)
+        print("6.3 Повідомлення надіслано успішно")
     except Exception as e:
         print(f"6.4 Виникла помилка в send_message: {e}")
         raise e
