@@ -3,8 +3,8 @@ from telethon import TelegramClient
 
 app = Quart(__name__)
 
-api_id = '22498731'
-api_hash = '618127d98fedccad5cffa3546117da3b'
+api_id = '20874291'
+api_hash = '0662892f1cbbfb0b94e0b22c96801a4e'
 #phone = '+380936707972'  # Ваш номер телефону
 
 client = TelegramClient('birthday_greetings_session', api_id, api_hash)
